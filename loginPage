@@ -1,0 +1,27 @@
+package page;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+
+public class LoginPage {
+
+	WebDriver driver;
+
+	// Constructor
+	public LoginPage(WebDriver driver) {
+		this.driver = driver;
+	}
+
+	// Locators
+	By uname = By.id("emailid");
+	By password = By.id("password");
+	By LoginBtn = By.xpath("//button[text()='Log in Now']");
+
+	// Login Method
+	public void loginPage(String email, String pwd) {
+		driver.findElement(uname).sendKeys(email);
+		driver.findElement(password).sendKeys(pwd);
+		driver.findElement(LoginBtn).click();
+	}
+
+}
