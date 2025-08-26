@@ -1,0 +1,46 @@
+package aug25;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.testng.annotations.Test;
+
+public class ParallelTesting {
+
+	// WebDriver driver;
+
+	@Test
+	public void ChromeTest() {
+		WebDriver driver = new ChromeDriver();
+		System.out.println("Running ChromeTest on Thread ID: " + Thread.currentThread().getId());
+		driver.manage().window().maximize();
+		driver.get("https://www.moneyworks4me.com");
+		System.out.println(driver.getTitle());
+		driver.close();
+	}
+
+	@Test
+	public void FirefoxTest() {
+		ChromeOptions option = new ChromeOptions();
+		option.addArguments("--incognito");
+		WebDriver driver = new ChromeDriver(option);
+		System.out.println("Running Incognito ChromeTest on Thread ID: " + Thread.currentThread().getId());
+		driver.manage().window().maximize();
+		driver.get("https://www.moneyworks4me.com/login");
+		System.out.println(driver.getTitle());
+		driver.close();
+	}
+
+}
+
+
+** XML File
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite parallel="methods" thread-count="2"  name="Suite">
+  <test thread-count="2" name="Test">
+    <classes>
+      <class name="aug25.ParallelTesting"/>
+    </classes>
+  </test> <!-- Test -->
+</suite> <!-- Suite -->
