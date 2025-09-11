@@ -1,0 +1,38 @@
+package requests;
+
+import org.testng.annotations.Test;
+import static io.restassured.RestAssured.*;
+import static org.hamcrest.Matchers.*;
+import java.util.HashMap;
+
+public class Payload_Using_HashMap {
+	
+	
+	@Test
+	public void createRecord()
+	{
+		HashMap<String, Object> data = new HashMap<String, Object>();
+		data.put("year", 2019);
+		data.put("price", 1849.99);
+		data.put("CPU model", "Intel Core i9");
+		data.put("Hard disk size", "1 TB");
+		
+		HashMap<String, Object> laptop_name = new HashMap<String, Object>();
+		laptop_name.put("name", "Apple MacBook Pro 16");
+		laptop_name.put("data", data);
+		
+		given()
+			.contentType("application/json")
+			.body(laptop_name)
+		
+		.when()
+			.post("https://api.restful-api.dev/objects")		
+		
+		.then()
+			.statusCode(200)
+			.body("data.year",equalTo(2019) )
+			.log().all();		
+		
+	}
+
+}
