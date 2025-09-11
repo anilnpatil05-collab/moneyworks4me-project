@@ -1,0 +1,80 @@
+package requests;
+import static io.restassured.RestAssured.*;
+import static org.hamcrest.Matchers.*;
+import java.util.HashMap;
+import org.testng.annotations.Test;
+
+public class AllRequests {
+	
+	int userid;
+	
+	@Test (priority=0)
+	public void getUser()
+	{
+		given()
+			.header("x-api-key", "reqres-free-v1")
+		
+		.when()
+			.get("https://reqres.in/api/users/2")
+		
+		.then()
+			.statusCode(200)
+			.log().all();
+		
+	}
+	
+	@Test (priority=1)
+	public void createUser()
+	{
+		HashMap data=new HashMap();
+		data.put("name", "Swami");
+		data.put("job", "God");
+		
+		userid = given()
+			.header("x-api-key", "reqres-free-v1")
+			.contentType("application/json")
+			.body(data)
+		
+		.when()
+			.post("https://reqres.in/api/users").jsonPath().getInt("id");				
+		
+	}
+	
+	@Test (priority=2, dependsOnMethods={"createUser"})
+	public void updateUser()
+	{
+		HashMap data=new HashMap();
+		data.put("name", "Swami_Samarth");
+		data.put("job", "Akkalkot");
+		
+		given()
+			.header("x-api-key", "reqres-free-v1")
+			.contentType("application/json")
+			.body(data)
+		
+		.when()
+			.put("https://reqres.in/api/users/" + userid)		
+		
+		.then()
+			.statusCode(200)
+			.body("name", equalTo("Swami_Samarth"))
+			.log().all();		
+		
+	}	
+	
+	@Test (priority=3, dependsOnMethods= {"updateUser"})
+	public void deleteUser()
+	{
+		given()
+			.header("x-api-key", "reqres-free-v1")
+		
+		.when()
+			.delete("https://reqres.in/api/users/" + userid)
+			
+		.then()
+			.statusCode(204)
+			.log().all();
+		
+	}
+
+}
