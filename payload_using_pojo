@@ -1,0 +1,113 @@
+****** File 1 *******
+
+package requests;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public class Payload_Pojo_Data {
+	
+	//Encapsulation is used
+	
+	private int year;
+	private double price;
+	
+	@JsonProperty("CPU Model")
+	private String CpuModel;
+	
+	@JsonProperty("Hard disk size")
+	private String hardDiskSize;
+
+	public int getYear() {
+		return year;
+	}
+
+	public void setYear(int year) {
+		this.year = year;
+	}
+
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
+
+	public String getCpuModel() {
+		return CpuModel;
+	}
+
+	public void setCpuModel(String cpuModel) {
+		CpuModel = cpuModel;
+	}
+
+	public String getHardDiskSize() {
+		return hardDiskSize;
+	}
+
+	public void setHardDiskSize(String hardDiskSize) {
+		this.hardDiskSize = hardDiskSize;
+	}		
+
+}
+
+********** File 2 ***********
+package requests;
+
+public class Payload_Pojo_Laptop_Name {
+	
+	private String name;
+	private Payload_Pojo_Data data;
+	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public Payload_Pojo_Data getData() {
+		return data;
+	}
+	public void setData(Payload_Pojo_Data data) {
+		this.data = data;
+	}	
+
+}
+
+****** File 3 ********
+package requests;
+
+import static io.restassured.RestAssured.*;
+import static org.hamcrest.Matchers.*;
+
+public class Payload_Pojo {	
+
+	void createProduct()
+	{
+		Payload_Pojo_Data data=new Payload_Pojo_Data();
+		data.setYear(2025);
+		data.setPrice(2025.25);
+		data.setCpuModel("Intel Core i9");
+		data.setHardDiskSize("1 TB");
+		
+		Payload_Pojo_Laptop_Name laptopName=new Payload_Pojo_Laptop_Name();
+		laptopName.setName("Apple MacBook Pro 16");
+		laptopName.setData(data);
+
+		
+		given()
+			.contentType("application/json")
+			.body(laptopName.toString())	
+			.log().body()
+		
+		.when()
+			.post("https://api.restful-api.dev/objects")		
+		
+		.then()
+			.statusCode(201)
+			.body("data.year", equalTo(2025))
+			.log().all();		
+		
+	}
+
+}
