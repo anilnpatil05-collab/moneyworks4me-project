@@ -80,8 +80,11 @@ package requests;
 import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 
+import org.testng.annotations.Test;
+
 public class Payload_Pojo {	
 
+	@Test
 	void createProduct()
 	{
 		Payload_Pojo_Data data=new Payload_Pojo_Data();
@@ -93,20 +96,19 @@ public class Payload_Pojo {
 		Payload_Pojo_Laptop_Name laptopName=new Payload_Pojo_Laptop_Name();
 		laptopName.setName("Apple MacBook Pro 16");
 		laptopName.setData(data);
-
 		
 		given()
 			.contentType("application/json")
-			.body(laptopName.toString())	
+			.body(laptopName)	
 			.log().body()
 		
 		.when()
 			.post("https://api.restful-api.dev/objects")		
 		
 		.then()
-			.statusCode(201)
-			.body("data.year", equalTo(2025))
-			.log().all();		
+			.statusCode(200)
+			.log().all()	
+		    .body("data.year", equalTo(2025));
 		
 	}
 
