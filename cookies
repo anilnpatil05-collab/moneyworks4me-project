@@ -1,0 +1,78 @@
+package requests;
+
+import static io.restassured.RestAssured.*;
+
+import java.util.Map;
+
+import org.testng.annotations.Test;
+
+import io.restassured.http.Cookie;
+import io.restassured.http.Cookies;
+import io.restassured.response.Response;
+
+public class CookieTest {
+
+	@Test(priority = 1)
+	void testCookies() {
+		given()
+
+		.when()
+			.get("https://www.moneyworks4me.com/")
+
+		.then()
+			.cookie("source_url", "www.moneyworks4me.com")
+			.log().all();
+
+	}
+
+	@Test(priority = 2)
+	void testAllCookies() {
+		Response res = given()
+			.when()
+				.get("https://www.moneyworks4me.com/");
+		String sourceUrl = res.getCookie("source_url");
+		System.out.println("Source URl: " + sourceUrl); 
+
+		Map<String, String> all_cookies = res.getCookies();
+		System.out.println(all_cookies.keySet()); //will print cookie name
+		System.out.println("******* 2nd Test Case *******");
+		for(String i : all_cookies.keySet()) 
+		{
+			String cookieName = i.toString();
+			String cookieValue = res.getCookie(i);
+			System.out.println(cookieName + " = " + cookieValue);
+		}
+
+	}
+	
+	@Test(priority = 3)
+	void testAllDetailedCookies() {
+		Response res = given()
+			.when()
+				.get("https://www.moneyworks4me.com/");
+					System.out.println("******* 3rd Test Case *******");
+					Cookie cookie = res.getDetailedCookie("source_url");
+					System.out.println(cookie.getDomain());
+					System.out.println(cookie.getName());
+					System.out.println(cookie.getPath());
+
+		}
+	
+	@Test(priority = 4)
+	void testAllDCookies() {
+		Response res = given()
+			.when()
+				.get("https://www.moneyworks4me.com/");
+				
+				Cookies all_cookies = res.getDetailedCookies();
+				System.out.println("******* 4th Test Case *******");
+				for(Cookie cookie : all_cookies.asList())
+				{
+					System.out.println(cookie.getDomain());
+					System.out.println(cookie.getName());
+					System.out.println(cookie.getPath());
+				}
+
+
+		}
+}
