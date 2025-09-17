@@ -1,0 +1,43 @@
+package requests;
+
+import static io.restassured.RestAssured.*;
+
+import org.testng.annotations.Test;
+
+import io.restassured.http.Header;
+import io.restassured.http.Headers;
+import io.restassured.response.Response;
+
+public class HeaderInfo {
+	
+	@Test
+	void headerInfo() {
+	given()
+	
+	.when()
+		.get("https://www.samsung.com/in/")
+	
+	.then()
+		.statusCode(200)
+		.header("Content-Type", "text/html; charset=UTF-8")
+		.header("X-Frame-Options", "SAMEORIGIN");		
+	}	
+	
+	@Test
+	void headerAllInfo() {
+	Response res = given()
+	
+	.when()
+		.get("https://www.samsung.com/in/");
+		Headers all_headers = res.getHeaders();
+		
+		for (Header header :all_headers)
+		{
+			String headerName = header.getName();
+			String headerValue = header.getValue();
+			System.out.println("Name:" + headerName + " " + "Value" + headerValue);
+		}
+		
+	}	
+
+}
