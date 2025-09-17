@@ -1,0 +1,28 @@
+package requests;
+
+import static io.restassured.RestAssured.*;
+
+import org.testng.annotations.Test;
+
+public class ParametersHandling {
+	
+	//https://api.restful-api.dev/objects?id=3&id=5&id=10
+	@Test
+	void getParameter()
+	{
+		given()
+			.pathParam("myobject", "objects")
+			.queryParam("id", "3")
+			.queryParam("id", "5")
+			.queryParam("id", "10")
+		
+		.when()
+			.get("https://api.restful-api.dev/{myobject}")
+		
+		.then()
+			.statusCode(200)	
+			.log().all();
+		
+	}
+
+}
