@@ -1,0 +1,44 @@
+package requests;
+import static io.restassured.RestAssured.*;
+import static org.hamcrest.Matchers.*;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+import io.restassured.response.Response;
+
+public class ParsingJson {
+	
+	@Test (priority = 1)
+	void jsonResponseTest()
+	{
+		given()
+		
+		.when()
+			.get("https://dummyjson.com/products")		
+		
+		.then()
+			.statusCode(200)
+			.body("products[10].id", equalTo(11)) //use json path finder
+			.body("products[10].title", equalTo("Annibale Colombo Bed"));
+		
+	}
+	
+	@Test (priority = 2)
+	void jsonResponse()
+	{
+		Response res = given()
+		
+		.when()
+			.get("https://dummyjson.com/products");
+
+		Assert.assertEquals(res.getStatusCode(), 200);
+		Assert.assertEquals(res.header("Content-Type"), "application/json; charset=utf-8");
+		
+		String productTitle = res.jsonPath().get("products[10].title").toString();
+		String productWeight = res.jsonPath().get("products[10].weight").toString();
+		
+		Assert.assertEquals(productTitle, "Annibale Colombo Bed");
+		Assert.assertEquals(productWeight, "10");
+		
+	}
+
+}
